@@ -32,3 +32,20 @@ def persons(id:int):
 @app.get('/profile/{username}')
 def profile(username:str):
     return {f'this is the profile page for user : {username}'}
+
+##################################################################
+
+#ordering of routes
+@app.get('/user/admin')
+def admin():
+    return{'This is admin page'}
+
+@app.get('/user/{name}')
+def page(name):
+    return{f'this is a profile page for user {name}'}
+####################################################################
+
+#query parametres
+@app.get('/products')
+def products(id,price):
+    return {f'product with and id: {id},{price}'}
