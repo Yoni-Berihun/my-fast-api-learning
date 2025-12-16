@@ -1,35 +1,58 @@
-#importing the module 
+#exercise one Path paramenter
+
 from fastapi import FastAPI
 from pydantic import BaseModel
+ 
+app=FastAPI()
+@app.get('/user/{id:int}')
+def user(id):
+     return {"message":f"user with id {id}"}
 
-class Profile(BaseModel):
+#exercise two query parameter
+
+@app.get('/items')
+def items(page:int, limit:int):
+    return {"page":page, 
+            "limit":limit
+           }
+#exercise three Request body(Pydantic) 
+class Student(BaseModel):
     name:str
-    email:str
-    age:int
-
-
-class Product(BaseModel):
-    name:str
-    price:int
-    discount:int
-    discounted_price:int
+    score:int
+    result:int
     
-class User(BaseModel):
+@app.post('/students')
+def student(student:Student):
+    return student 
+ 
+ #exercise four Using model inside a function
+class Undergraduate(BaseModel):
     name:str
-    email:str
-       
-#creating instance of the class fast API
-app = FastAPI()
+    score:int
+    result:None
+@app.post('/undergraduate')
+def transcript(undergraduate:Undergraduate):
+    if undergraduate.score >= 50:
+        undergraduate.result="Pass"
+    else:
+        undergraduate.result="Fail"
+    return undergraduate
 
-@app.post('/purchase')
-def purchase(user:User,product:Product):
-    return {"user": user, "product":product}
+#exercise five path +query+ request body
+class Order(BaseModel):
+    item_name:str
+    price:int
+    quantity:int
+    total_price:None
+class Customer(BaseModel):
+    name:str
 
-@app.post('/adduser')
-def adduser(profile:Profile):
-    return profile
-#using model inside a function
-@app.post('/addproduct/{product_id}')
-def addproduct(product:Product, product_id:int, category:str):
-    product.discounted_price = product.price - (product.price * product.discount)/100
-    return {"Product_Id":product_id, "Product":product, 'category':category}
+@app.post('/orders/{order_id}')
+def order_detail(
+    order:Order,
+    order_id:int,
+    customer:str
+):
+    order.total_price=order.price*order.quantity
+    return{"order_id" :order_id,"customer":customer,"order":order}
+ 
