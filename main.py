@@ -1,7 +1,7 @@
 #exercise one Path paramenter
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
  
 app=FastAPI()
 @app.get('/user/{id:int}')
@@ -17,9 +17,10 @@ def items(page:int, limit:int):
            }
 #exercise three Request body(Pydantic) 
 class Student(BaseModel):
-    name:str
-    score:int
+    name:str =Field(title=" name fo the student", description="this would be the name of the student that is beig ")
+    score:int =Field(description="this is the score of the student that is being added",gt=0)
     result:int
+    
     
 @app.post('/students')
 def student(student:Student):
