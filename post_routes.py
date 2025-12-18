@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Form
 from pydantic import BaseModel
 from typing import Set, List
 from uuid import UUID
@@ -60,6 +60,14 @@ class PurchaseRequest(BaseModel):
     product: Product
 
 app = FastAPI()
+
+@app.post('/login')
+def login(username:str=Form(...), password:str=Form(...)):
+    return{"username":username}
+    
+@app.post('/addevnet')
+def addevent(event:Event):
+    return{"event" :event}
 
 @app.post("/offer")
 def addoffer(offer: Offer):
